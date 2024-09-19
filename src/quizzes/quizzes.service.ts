@@ -84,6 +84,15 @@ export class QuizzesService {
       updateQuizDto.questions &&
       (await Promise.all(
         updateQuizDto.questions.map(async (question) => {
+          if (
+            question.correctAnswer &&
+            !question.options.includes(question.correctAnswer)
+          ) {
+            throw new BadRequestException(
+              `Correct answer ${question.correctAnswer} is not among the options`,
+            );
+          }
+
           if (question.id) {
             const existingQuestion = existingQuiz.questions.find(
               (q) => q.id === question.id,
