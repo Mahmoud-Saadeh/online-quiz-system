@@ -19,8 +19,16 @@
 2. Install dependencies: `npm install`.
 3. Ensure Docker and Docker Compose are installed, or install PostgreSQL locally.
 4. Configure your database in `.env` file, (you can copy and change the variables from `.env.example`).
-5. If using Docker, run the following to start the PostgreSQL container: `docker compose up -d`
-6. Run the project in development mode: `npm run start:dev`.
+5. If using Docker, run the following to start the PostgreSQL container: `docker compose up -d`.
+6. Run database migrations to create tables: `npm run migration:run`.
+7. Run the project in development mode: `npm run start:dev`.
+
+## Database Migration Setup
+
+- Generate a new migration: To create a new migration after making changes to your entities, use: `npm run migration:generate --name=MigrationName`.
+- Run migrations: To apply all pending migrations to the database, run: `npm run migration:run`.
+- Revert the last migration: If you need to undo the most recent migration, use: `npm run migration:revert`.
+- Show migration status: To check the list of applied and pending migrations, run: `npm run migration:show`.
 
 ## API Documentation
 
