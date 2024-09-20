@@ -1,11 +1,12 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quiz } from './entities/quiz.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuestionDto, UpdateQuizDto } from './dto/update-quiz.dto';
 import { Question } from './entities/question.entity';
@@ -85,7 +86,7 @@ export class QuizzesService {
       (await Promise.all(
         updateQuizDto.questions.map(async (question) => {
           if (
-            question.correctAnswer &&
+            typeof question.correctAnswer !== 'undefined' &&
             !question.options.includes(question.correctAnswer)
           ) {
             throw new BadRequestException(
@@ -122,6 +123,28 @@ export class QuizzesService {
 
     if (!updatedQuiz) {
       throw new NotFoundException(`Quiz #${id} not found`);
+    }
+
+    // Handle deletion of questions no longer part of the quiz
+    try {
+      const existingQuestionIds = existingQuiz.questions.map((q) => q.id);
+      const updatedQuestionIds = updateQuizDto.questions
+        ? updateQuizDto.questions.filter((q) => q.id).map((q) => q.id)
+        : [];
+
+      const questionsToDelete = existingQuestionIds.filter(
+        (id) => !updatedQuestionIds.includes(id),
+      );
+
+      if (questionsToDelete.length > 0) {
+        await this.questionRepository.delete({ id: In(questionsToDelete) });
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'An error occurred while deleting removed questions',
+      );
     }
 
     return this.quizRepository.save(updatedQuiz);
