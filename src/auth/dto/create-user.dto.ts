@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  ArrayNotEmpty,
+  IsIn,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -10,6 +16,7 @@ export class CreateUserDto {
   password: string;
 
   @IsArray()
-  @IsNotEmpty()
+  @ArrayNotEmpty()
+  @IsIn(['admin', 'user'], { each: true }) // Ensures each role is either 'admin' or 'user'
   roles: string[];
 }
