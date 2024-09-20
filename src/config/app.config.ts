@@ -5,4 +5,7 @@ export default registerAs('config', () => ({
   nodenv: process.env.NODE_ENV,
   secretKey: process.env.SECRET_KEY,
   jwtExpiration: process.env.JWT_EXPIRATION,
+  jwtRefreshExpiration: process.env.JWT_REFRESH_EXPIRATION,
+  redisHost: process.env.REDIS_HOST,
+  redisPort: process.env.REDIS_PORT,
 }));

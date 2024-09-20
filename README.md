@@ -1,4 +1,4 @@
-# Online Quiz System
+# Online Quiz System - Built with Nest.js, TypeORM, Redis, and PostgreSQL
 
 ## Features
 
@@ -11,15 +11,16 @@
 
 - Used Nest.js for scalability and structure.
 - TypeORM for database interaction.
-- JWT-based authentication for admin and users.
+- JWT-based stateless authentication for admin and users with refresh token functionality for improved security.
+- Redis for Token Rotation (invalidate refresh token after using it to generate a new token), enhancing security.
 
 ## Setup
 
 1. Clone the repository.
 2. Install dependencies: `npm install`.
-3. Ensure Docker and Docker Compose are installed, or install PostgreSQL locally.
-4. Configure your database in `.env` file, (you can copy and change the variables from `.env.example`).
-5. If using Docker, run the following to start the PostgreSQL container: `docker compose up -d`.
+3. Ensure Docker and Docker Compose are installed, or install PostgreSQL and Redis locally.
+4. Configure your database and Redis in `.env` file, (you can copy and change the variables from `.env.example`).
+5. If using Docker, run the following to start the PostgreSQL and Redis container: `docker compose up -d`.
 6. Run database migrations to create tables: `npm run migration:run`.
 7. Run the project in development mode: `npm run start:dev`.
 

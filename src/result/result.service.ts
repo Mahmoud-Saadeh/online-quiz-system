@@ -56,7 +56,7 @@ export class ResultService {
     score: number,
     answers: AttemptQuizDto,
   ): Promise<Result> {
-    // Fetch the User entity by username
+    // Fetch the User entity by user id
     const user = await this.userRepository.findOneBy({ id: userId });
 
     if (!user) {

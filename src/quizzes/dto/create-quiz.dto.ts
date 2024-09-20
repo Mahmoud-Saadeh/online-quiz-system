@@ -1,4 +1,9 @@
-import { IsString, IsArray, ValidateNested } from 'class-validator';
+import {
+  IsString,
+  IsArray,
+  ValidateNested,
+  ArrayNotEmpty,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateQuestionDto {
@@ -19,6 +24,7 @@ export class CreateQuizDto {
 
   @IsArray()
   @ValidateNested({ each: true })
+  @ArrayNotEmpty()
   @Type(() => CreateQuestionDto)
   questions: CreateQuestionDto[];
 }

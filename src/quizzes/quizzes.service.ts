@@ -19,6 +19,7 @@ export class QuizzesService {
     private readonly questionRepository: Repository<Question>,
   ) {}
 
+  // Create a quiz with its questions
   create(createQuizDto: CreateQuizDto): Promise<Quiz> {
     // Extract questions from the DTO
     const { questions } = createQuizDto;
@@ -42,10 +43,12 @@ export class QuizzesService {
     return this.quizRepository.save(quiz);
   }
 
+  // return all quizzes with their questions and answers
   findAll(): Promise<Quiz[]> {
     return this.quizRepository.find({ relations: ['questions'] });
   }
 
+  // return a quiz by id with its questions but without answers
   async findOne(id: number, excludeCorrectAnswer = false): Promise<Quiz> {
     const quiz = await this.quizRepository.findOne({
       where: { id },
@@ -66,10 +69,11 @@ export class QuizzesService {
 
     return quiz;
   }
-  // update(id: number, updateQuizDto: UpdateQuizDto): Promise<Quiz> {
-  //   return this.quizRepository.save({ ...updateQuizDto, id });
-  // }
 
+  /*
+    update a quiz
+    update title and questions if present in the body
+  */
   async update(id: number, updateQuizDto: UpdateQuizDto) {
     // Find the quiz with its questions
     const existingQuiz = await this.quizRepository.findOne({
@@ -163,11 +167,6 @@ export class QuizzesService {
     question: UpdateQuestionDto,
   ): Promise<Question> {
     if (question.id) {
-      // const existingQuestion = await this.questionRepository.findOne({
-      //   where: {
-      //     id: question.id,
-      //   },
-      // });
       const existingQuestion = await this.questionRepository.save(question);
 
       if (existingQuestion) {

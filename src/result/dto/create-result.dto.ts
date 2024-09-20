@@ -6,8 +6,6 @@ export class CreateResultDto {
 
   @IsNumber()
   userId: number;
-  //   @IsString()
-  //   username: string;
 
   @IsNumber()
   score: number;
