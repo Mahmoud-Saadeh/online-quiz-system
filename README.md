@@ -4,13 +4,15 @@
 
 - User registration and login
 - Admin functionalities to create, update, and delete quizzes
-- Users can view and attempt quizzes
+- Users can view and attempt quizzes, and get the scrore after completing the quiz.
 - Scores are calculated and saved.
 
 ## Design Decisions
 
 - Used Nest.js for scalability and structure.
 - TypeORM for database interaction.
+- Used global filter to catch all errors.
+- Swagger for api documentation.
 - JWT-based stateless authentication for admin and users with refresh token functionality for improved security.
 - Redis for Token Rotation (invalidate refresh token after using it to generate a new token), enhancing security.
 
@@ -21,7 +23,7 @@
 3. Ensure Docker and Docker Compose are installed, or install PostgreSQL and Redis locally.
 4. Configure your database and Redis in `.env` file, (you can copy and change the variables from `.env.example`).
 5. If using Docker, run the following to start the PostgreSQL and Redis container: `docker compose up -d`.
-6. Run database migrations to create tables: `npm run migration:run`.
+6. Run database migrations to create tables: `npm run migration:generate --name=MigrationName` and `npm run migration:run` if `NODE_ENV != development` .
 7. Run the project in development mode: `npm run start:dev`.
 
 ## Database Migration Setup
@@ -34,3 +36,4 @@
 ## API Documentation
 
 - Access the Swagger UI for API documentation at http://localhost:3000/api.
+- You can test authorized APIs by pasting the access token to Swagger.

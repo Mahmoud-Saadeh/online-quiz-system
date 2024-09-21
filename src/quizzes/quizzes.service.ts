@@ -6,10 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Quiz } from './entities/quiz.entity';
-import { In, Repository } from 'typeorm';
+import { DataSource, In, Repository } from 'typeorm';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuestionDto, UpdateQuizDto } from './dto/update-quiz.dto';
 import { Question } from './entities/question.entity';
+import { Result } from 'src/result/entities/result.entity';
 
 @Injectable()
 export class QuizzesService {
@@ -17,6 +18,9 @@ export class QuizzesService {
     @InjectRepository(Quiz) private readonly quizRepository: Repository<Quiz>,
     @InjectRepository(Question)
     private readonly questionRepository: Repository<Question>,
+    @InjectRepository(Result)
+    private readonly resultRepository: Repository<Result>,
+    private readonly dataSource: DataSource,
   ) {}
 
   // Create a quiz with its questions
@@ -155,12 +159,29 @@ export class QuizzesService {
   }
 
   async delete(id: number): Promise<Quiz> {
-    const quiz = await this.findOne(id);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    // Remove all questions associated with the quiz
-    await this.questionRepository.delete({ quiz: { id: id } });
+    try {
+      const quiz = await this.findOne(id);
 
-    return this.quizRepository.remove(quiz);
+      // Remove all questions associated with the quiz
+      await this.questionRepository.delete({ quiz: { id: id } });
+
+      // Remove all results associated with the quiz
+      await this.resultRepository.delete({ quiz: { id: id } });
+
+      return this.quizRepository.remove(quiz);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      // rollback the changes we made
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      // release a queryRunner
+      await queryRunner.release();
+    }
   }
 
   private async preloadQuestionById(

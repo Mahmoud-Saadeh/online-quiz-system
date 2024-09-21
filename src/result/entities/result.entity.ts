@@ -1,6 +1,13 @@
 import { User } from 'src/auth/user.entity';
 import { Quiz } from 'src/quizzes/entities/quiz.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity('results')
 export class Result {
@@ -18,4 +25,10 @@ export class Result {
 
   @Column('json')
   answers: { questionId: number; givenAnswer: string }[];
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 }

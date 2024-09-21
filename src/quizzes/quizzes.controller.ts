@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   Req,
   UseGuards,
   ValidationPipe,
@@ -39,7 +39,7 @@ export class QuizzesController {
   @ApiTags('Admin')
   @UseGuards(RolesGuard)
   @Roles(ROLES.ADMIN)
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: number,
     @Body(ValidationPipe) updateQuizDto: UpdateQuizDto,

@@ -1,6 +1,12 @@
-import { PartialType } from '@nestjs/swagger';
+// import { PartialType } from '@nestjs/swagger';
 import { CreateQuestionDto, CreateQuizDto } from './create-quiz.dto';
-import { IsArray, IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNumber,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateQuestionDto extends CreateQuestionDto {
@@ -9,9 +15,10 @@ export class UpdateQuestionDto extends CreateQuestionDto {
   id?: number;
 }
 
-export class UpdateQuizDto extends PartialType(CreateQuizDto) {
+export class UpdateQuizDto extends CreateQuizDto {
   @IsArray()
   @ValidateNested({ each: true })
+  @ArrayNotEmpty()
   @Type(() => UpdateQuestionDto)
-  questions?: UpdateQuestionDto[];
+  questions: UpdateQuestionDto[];
 }

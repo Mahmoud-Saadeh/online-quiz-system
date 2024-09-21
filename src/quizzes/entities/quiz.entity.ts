@@ -1,4 +1,11 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Question } from './question.entity';
 import { Result } from 'src/result/entities/result.entity';
 
@@ -15,4 +22,10 @@ export class Quiz {
 
   @OneToMany(() => Result, (result) => result.quiz, { cascade: true })
   results: Result[];
+
+  @CreateDateColumn({ type: 'timestamptz' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt: Date;
 }
